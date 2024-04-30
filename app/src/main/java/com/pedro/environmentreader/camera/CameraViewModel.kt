@@ -5,6 +5,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.lifecycle.ViewModel
 import com.pedro.environmentreader.R
+import com.pedro.environmentreader.common.image.GetImageFileUseCase
 import com.pedro.environmentreader.common.image.ImageConstants
 import com.pedro.environmentreader.common.view.button.ButtonState
 import com.pedro.environmentreader.common.view.button.ButtonViewState
@@ -17,7 +18,9 @@ import java.util.Optional
 import javax.inject.Inject
 
 @HiltViewModel
-class CameraViewModel @Inject constructor() : ViewModel() {
+class CameraViewModel @Inject constructor(
+    private val getImageFileUseCase: GetImageFileUseCase,
+) : ViewModel() {
 
     private val _cameraViewStateStream = BehaviorSubject.createDefault(
         buildCameraViewState()
@@ -44,21 +47,10 @@ class CameraViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun deleteLastPicture() {
-        val pictureFile = getPictureFile()
+        val pictureFile = getImageFileUseCase.getImageFile()
         if (pictureFile.exists()) {
             pictureFile.delete()
         }
-    }
-
-    private fun getPictureFile(): File {
-        val picturesPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val filePath = StringBuilder()
-            .append(picturesPath)
-            .append("/")
-            .append(ImageConstants.IMAGE_FILE_PATH)
-            .append("/")
-            .append(ImageConstants.IMAGE_FILE_NAME)
-        return File(filePath.toString())
     }
 
     private fun onPictureSuccessfullySaved() {
