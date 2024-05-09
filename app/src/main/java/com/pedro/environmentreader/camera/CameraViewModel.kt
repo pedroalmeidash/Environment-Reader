@@ -9,9 +9,11 @@ import com.pedro.environmentreader.common.image.GetImageFileUseCase
 import com.pedro.environmentreader.common.image.ImageConstants
 import com.pedro.environmentreader.common.view.button.ButtonState
 import com.pedro.environmentreader.common.view.button.ButtonViewState
+import com.pedro.environmentreader.navigation.NavigationModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.io.File
 import java.lang.StringBuilder
 import java.util.Optional
@@ -27,6 +29,10 @@ class CameraViewModel @Inject constructor(
     )
     val cameraViewStateStream: Observable<Optional<CameraViewState>> =
         _cameraViewStateStream.hide()
+
+    private val _navigationRequestStream: PublishSubject<NavigationModel> = PublishSubject.create()
+    val navigationRequestStream: Observable<NavigationModel> =
+        _navigationRequestStream.hide()
 
     fun handleViewEvent(viewEvent: CameraViewEvent) {
         when (viewEvent) {
@@ -54,7 +60,7 @@ class CameraViewModel @Inject constructor(
     }
 
     private fun onPictureSuccessfullySaved() {
-        // TODO go to screen to request process
+        _navigationRequestStream.onNext(NavigationModel.NavigateToImageAnalysisScreen)
         _cameraViewStateStream.onNext(
             buildCameraViewState(
                 buttonState = ButtonState.ACTIVE,

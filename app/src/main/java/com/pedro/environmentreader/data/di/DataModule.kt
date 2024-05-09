@@ -1,5 +1,6 @@
 package com.pedro.environmentreader.data.di
 
+import com.pedro.environmentreader.common.image.GetImageFileUseCase
 import com.pedro.environmentreader.data.api.ImageAnalysisService
 import com.pedro.environmentreader.data.repository.ImageAnalysisRepository
 import com.squareup.moshi.Moshi
@@ -24,7 +25,7 @@ sealed class DataModule {
         fun provideRetrofit(): Retrofit {
             // TODO get baseUrl from gradle
             return Retrofit.Builder()
-                .baseUrl("")
+                .baseUrl("https://google.com")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .build()
@@ -41,9 +42,13 @@ sealed class DataModule {
         @Provides
         @Singleton
         fun provideImageAnalysisRepository(
-            imageAnalysisService: ImageAnalysisService
+            imageAnalysisService: ImageAnalysisService,
+            getImageFileUseCase: GetImageFileUseCase,
         ): ImageAnalysisRepository {
-            return ImageAnalysisRepository(imageAnalysisService)
+            return ImageAnalysisRepository(
+                imageAnalysisService = imageAnalysisService,
+                getImageFileUseCase = getImageFileUseCase,
+            )
         }
     }
 }

@@ -11,7 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import com.pedro.environmentreader.R
 import com.pedro.environmentreader.common.view.button.Button
 
 @Composable
@@ -22,6 +27,22 @@ fun RequestPermissionView(
     if (viewState !is RequestPermissionViewState.Loaded) return
     
     Scaffold(
+        topBar = {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    text = stringResource(id = R.string.app_name),
+                    fontSize = TextUnit(28f, TextUnitType.Sp),
+                    fontFamily = FontFamily.Serif,
+                    textAlign = TextAlign.Center,
+                )
+            }
+        },
         content = {
             Box(
                 modifier = Modifier
@@ -29,7 +50,13 @@ fun RequestPermissionView(
                     .padding(it),
                 contentAlignment = Alignment.Center,
             ) {
-                Text(text = stringResource(id = viewState.descriptionRes))
+                Text(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    text = stringResource(id = viewState.descriptionRes),
+                    fontSize = TextUnit(20f, TextUnitType.Sp),
+                    fontFamily = FontFamily.SansSerif,
+                    textAlign = TextAlign.Center,
+                )
             }
         },
         bottomBar = {
